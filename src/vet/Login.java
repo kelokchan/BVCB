@@ -175,7 +175,7 @@ public class Login extends javax.swing.JFrame {
 
                 switch (category) {
                     case "Receptionist":
-                        MainScreen ms = new MainScreen();
+                        RecepScreen ms = new RecepScreen();
                         ms.setVisible(true);
                         break;
                     case "Boarding Staff":
