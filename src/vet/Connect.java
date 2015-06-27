@@ -19,7 +19,7 @@ public class Connect {
 
     public static Connection ConnectDB() {
         try {
-            String url = "jdbc:derby://localhost:1527/BVCBData";
+            String url = "jdbc:ucanaccess://C:/Users/Kelok/Documents/NetBeansProjects/BVCB/BVCBData.accdb";
             Connection con = DriverManager.getConnection(url);
             return con;
         } catch (Exception ex) {

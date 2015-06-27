@@ -1,7 +1,7 @@
-Tue Jun 23 22:11:36 SGT 2015 : Apache Derby Network Server - 10.8.3.2 - (1557835) started and ready to accept connections on port 1527
+Wed Jun 24 20:20:06 SGT 2015 : Apache Derby Network Server - 10.8.3.2 - (1557835) started and ready to accept connections on port 1527
 ----------------------------------------------------------------
-Tue Jun 23 22:11:36 SGT 2015:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.3.2 - (1557835): instance a816c00e-014e-20c2-7391-ffffe773d2a4 
+Wed Jun 24 20:20:07 SGT 2015:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.3.2 - (1557835): instance a816c00e-014e-2582-bc7b-ffffe773d2a4 
 on database directory C:\Users\Kelok\Documents\NetBeansProjects\BVCB\BVCBData  with class loader sun.misc.Launcher$AppClassLoader@5e875dee 
 Loaded from file:/C:/Program%20Files/Java/jdk1.7.0_79/db/lib/derby.jar
 java.vendor=Oracle Corporation
@@ -13,4 +13,4 @@ os.version=6.3
 derby.system.home=C:\Users\Kelok\Documents\NetBeansProjects\BVCB
 Database Class Loader started - derby.database.classpath=''
 ----------------------------------------------------------------
-Tue Jun 23 22:34:39 SGT 2015: Shutting down Derby engine
+Wed Jun 24 20:25:24 SGT 2015: Shutting down Derby engine

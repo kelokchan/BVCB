@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vet;
+package UI;
 
 import java.sql.*;
 import javax.swing.JOptionPane;
+import vet.Connect;
 
 /**
  *
@@ -165,17 +166,17 @@ public class Login extends javax.swing.JFrame {
     public void checkLogin(String id, String password) throws SQLException {
         String category = null;
         try {
-            String queryString = "SELECT * FROM USERS where ID = '" + id + "' AND PASSWORD = '" + password + "' ";
+            String queryString = "SELECT * FROM USERS where ID = '" + id + "' AND Password = '" + password + "' ";
             con = Connect.ConnectDB();
             stmt = con.createStatement();
             results = stmt.executeQuery(queryString);
             if (results.next()) {
-                category = results.getString("POSITION");
+                category = results.getString("Position");
                 JOptionPane.showMessageDialog(null, "Welcome");
 
                 switch (category) {
                     case "Receptionist":
-                        RecepScreen ms = new RecepScreen();
+                        RecepMenu ms = new RecepMenu();
                         ms.setVisible(true);
                         break;
                     case "Boarding Staff":

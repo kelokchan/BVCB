@@ -111,4 +111,24 @@ public class Person {
         this.Email = Email;
     }
 
+    private String phoneNo;
+
+    /**
+     * Get the value of phoneNo
+     *
+     * @return the value of phoneNo
+     */
+    public String getPhoneNo() {
+        return phoneNo;
+    }
+
+    /**
+     * Set the value of phoneNo
+     *
+     * @param phoneNo new value of phoneNo
+     */
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
+    }
+
 }
