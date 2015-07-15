@@ -7,19 +7,22 @@ package UI;
 
 import javax.swing.JOptionPane;
 import java.sql.*;
-import javax.swing.*;
 import net.proteanit.sql.DbUtils;
-import vet.Connect;
+import Classes.Connect;
+import Classes.EnumItems;
+import Classes.ITableUpdate;
+import javax.swing.DefaultComboBoxModel;
 
 /**
  *
  * @author Kelok
  */
-public class Register extends javax.swing.JFrame {
+public class Register extends javax.swing.JFrame implements ITableUpdate {
 
     Statement stmt = null;
     Connection con = null;
     ResultSet rs = null;
+
 
     /**
      * Creates new form Register
@@ -27,7 +30,7 @@ public class Register extends javax.swing.JFrame {
     public Register() {
         initComponents();
         setLocationRelativeTo(null);
-        UpdateJTable();
+        updateJTable();
     }
 
     @SuppressWarnings("unchecked")
@@ -36,7 +39,7 @@ public class Register extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        regUser = new javax.swing.JTextField();
+        regID = new javax.swing.JTextField();
         regPwd = new javax.swing.JTextField();
         createBtn = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
@@ -50,11 +53,13 @@ public class Register extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         regGender = new javax.swing.JComboBox();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        userJTable = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
         regPhone = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        regExp = new javax.swing.JTextField();
+        regExp = new javax.swing.JComboBox();
+        jLabel9 = new javax.swing.JLabel();
+        regExp2 = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Register");
@@ -106,8 +111,8 @@ public class Register extends javax.swing.JFrame {
 
         regGender.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Male", "Female" }));
 
-        jTable1.setAutoCreateRowSorter(true);
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        userJTable.setAutoCreateRowSorter(true);
+        userJTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -118,12 +123,12 @@ public class Register extends javax.swing.JFrame {
                 "Fullname","ID","Password","Position","Gender","Email","PhoneNo"
             }
         ));
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        userJTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jTable1MouseClicked(evt);
+                userJTableMouseClicked(evt);
             }
         });
-        jScrollPane2.setViewportView(jTable1);
+        jScrollPane2.setViewportView(userJTable);
 
         jLabel7.setText("Phone no:");
 
@@ -131,96 +136,96 @@ public class Register extends javax.swing.JFrame {
 
         regExp.setEnabled(false);
 
+        jLabel9.setText("Second expertise:");
+
+        regExp2.setEnabled(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(regPos, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel3)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel2)
-                                    .addGap(18, 18, 18))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addComponent(jLabel6)
-                                    .addGap(29, 29, 29)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addGap(40, 40, 40)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(regPwd, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addComponent(regEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(regUser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(regName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(regGender, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(18, 18, 18)
-                        .addComponent(regPhone))
-                    .addGroup(layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
                         .addComponent(createBtn)
                         .addGap(18, 18, 18)
                         .addComponent(updateBtn)
                         .addGap(17, 17, 17)
                         .addComponent(deleteBtn))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel8)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(16, 16, 16)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4))
                         .addGap(18, 18, 18)
-                        .addComponent(regExp)))
-                .addGap(28, 28, 28)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(regPos, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(regPwd, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(2, 2, 2)
+                                    .addComponent(regEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(regID, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(regName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(regGender, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(regExp, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(regPhone)
+                            .addComponent(regExp2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 622, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(regPos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(regName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(regName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(regUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(regID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(regPwd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(regPwd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(regGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(regGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6))
                         .addGap(13, 13, 13)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(regEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(regEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(regPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(regPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8)
-                            .addComponent(regExp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 31, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                            .addComponent(regExp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel9)
+                            .addComponent(regExp2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 8, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(createBtn)
@@ -232,7 +237,8 @@ public class Register extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void UpdateJTable() {
+    @Override
+    public final void updateJTable() {
 
         String position = regPos.getSelectedItem().toString();
         String query = "SELECT * FROM " + position + "";
@@ -240,8 +246,8 @@ public class Register extends javax.swing.JFrame {
             con = Connect.ConnectDB();
             stmt = con.createStatement();
             rs = stmt.executeQuery(query);
-            jTable1.setModel(DbUtils.resultSetToTableModel(rs));
-            jTable1.getRowSorter().toggleSortOrder(2);
+            userJTable.setModel(DbUtils.resultSetToTableModel(rs));
+            userJTable.getRowSorter().toggleSortOrder(1);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
@@ -251,20 +257,25 @@ public class Register extends javax.swing.JFrame {
         // TODO add your handling code here:
         try {
             String position = regPos.getSelectedItem().toString();
-            String Query = "INSERT INTO " + position + " (Fullname, ID, Password, Position, Gender, Email, PhoneNo) VALUES ('" + regName.getText() + "','" + regUser.getText() + "','"
+            String Query = "INSERT INTO " + position + " (Fullname, ID, Password, Position, Gender, Email, PhoneNo) VALUES ('" + regName.getText() + "','" + regID.getText() + "','"
                     + regPwd.getText() + "', '" + regPos.getSelectedItem() + "','" + regGender.getSelectedItem() + "', '" + regEmail.getText() + "', '" + regPhone.getText() + "' )";
-            String userQuery = "INSERT INTO USERS VALUES ('" + regUser.getText() + "','" + regPwd.getText() + "','" + regPos.getSelectedItem() + "')";
-
-            regName.setText(null);
-            regUser.setText(null);
-            regPwd.setText(null);
+            String userQuery = "INSERT INTO USERS VALUES ('" + regID.getText() + "','" + regPwd.getText() + "','" + regPos.getSelectedItem() + "', '" + regName.getText() + "')";
 
             con = Connect.ConnectDB();
             stmt = con.createStatement();
             stmt.execute(Query);
             stmt.execute(userQuery);
+            if (position.equals("Vet")) {
+                String additionalQuery = "UPDATE Vet SET Expertise = '" + regExp.getSelectedItem() + "', Expertise_2 = '" + regExp2.getSelectedItem() + "' WHERE ID = '" + regID.getText() + "'";
+                stmt.execute(additionalQuery);
+            }
+
+            regName.setText(null);
+            regID.setText(null);
+            regPwd.setText(null);
+
             JOptionPane.showMessageDialog(null, "User added to database");
-            UpdateJTable();
+            updateJTable();
 
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.toString());
@@ -275,13 +286,12 @@ public class Register extends javax.swing.JFrame {
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
         try {
             String position = regPos.getSelectedItem().toString();
-//            String userQuery = "DELETE FROM USERS WHERE Fullname = '" + regName.getText() + "'";
-            String Query = "DELETE FROM " + position + " WHERE Fullname = '" + regName.getText() + "' ; DELETE FROM USERS WHERE ID = '" + regUser.getText() + "'";
+            String Query = "DELETE FROM " + position + " WHERE Fullname = '" + regName.getText() + "' ; DELETE FROM USERS WHERE ID = '" + regID.getText() + "'";
             con = Connect.ConnectDB();
             stmt = con.createStatement();
             stmt.execute(Query);
             JOptionPane.showMessageDialog(null, "User deleted from database");
-            UpdateJTable();
+            updateJTable();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.toString());
         }
@@ -290,47 +300,59 @@ public class Register extends javax.swing.JFrame {
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
 
         try {
-            String selection = jTable1.getModel().getValueAt(jTable1.getSelectedRow(), 0).toString();
+            String selection = userJTable.getModel().getValueAt(userJTable.getSelectedRow(), 0).toString();
             String position = regPos.getSelectedItem().toString();
+            String query = "UPDATE " + position + " SET Fullname = '" + regName.getText() + "',ID = '" + regID.getText() + "', Password = '" + regPwd.getText()
+                    + "', Position = '" + regPos.getSelectedItem() + "', Gender = '" + regGender.getSelectedItem() + "', Email = '" + regEmail.getText() + "', PhoneNo = '" + regPhone.getText() + "' WHERE Fullname = '" + selection + "'";
+            String vetQuery = "UPDATE " + position + " SET Fullname = '" + regName.getText() + "',ID = '" + regID.getText() + "', Password = '" + regPwd.getText()
+                    + "', Position = '" + regPos.getSelectedItem() + "', Gender = '" + regGender.getSelectedItem() + "', Email = '" + regEmail.getText() + "', PhoneNo = '" + regPhone.getText() + "', Expertise = '" + regExp.getSelectedItem() + "' WHERE Fullname = '" + selection + "'";
             con = Connect.ConnectDB();
             stmt = con.createStatement();
-            String Query = "UPDATE " + position + " SET Fullname = '" + regName.getText() + "',ID = '" + regUser.getText() + "', Password = '" + regPwd.getText()
-                    + "', Position = '" + regPos.getSelectedItem() + "', Gender = '" + regGender.getSelectedItem() + "', Email = '" + regEmail.getText() + "', PhoneNo = '" + regPhone.getText() + "' WHERE Fullname = '" + selection + "'";
-            stmt.execute(Query);
+            if (position.equals("Vet")) {
+                stmt.execute(vetQuery);
+            } else {
+                stmt.execute(query);
+            }
             JOptionPane.showMessageDialog(null, "User info updated in database");
-            UpdateJTable();
+            updateJTable();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, ex.toString());
 
         }
     }//GEN-LAST:event_updateBtnActionPerformed
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+    private void userJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userJTableMouseClicked
         // TODO add your handling code here:
-        int row = jTable1.getSelectedRow();
-        regName.setText(jTable1.getModel().getValueAt(row, 0).toString());
-        regUser.setText(jTable1.getModel().getValueAt(row, 1).toString());
-        regPwd.setText(jTable1.getModel().getValueAt(row, 2).toString());
-        regPos.setSelectedItem(jTable1.getModel().getValueAt(row, 3).toString());
-        regGender.setSelectedItem(jTable1.getModel().getValueAt(row, 4).toString());
-        regEmail.setText(jTable1.getModel().getValueAt(row, 5).toString());
-        regPhone.setText(jTable1.getModel().getValueAt(row, 6).toString());
-    }//GEN-LAST:event_jTable1MouseClicked
+        int row = userJTable.getSelectedRow();
+        regName.setText(userJTable.getModel().getValueAt(row, 0).toString());
+        regID.setText(userJTable.getModel().getValueAt(row, 1).toString());
+        regPwd.setText(userJTable.getModel().getValueAt(row, 2).toString());
+        regPos.setSelectedItem(userJTable.getModel().getValueAt(row, 3).toString());
+        regGender.setSelectedItem(userJTable.getModel().getValueAt(row, 4).toString());
+        regEmail.setText(userJTable.getModel().getValueAt(row, 5).toString());
+        regPhone.setText(userJTable.getModel().getValueAt(row, 6).toString());
+        try {
+            regExp.setSelectedItem(userJTable.getModel().getValueAt(row, 7).toString());
+        } catch (Exception ex) {
+            regExp.setSelectedIndex(0);
+        }
+    }//GEN-LAST:event_userJTableMouseClicked
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
-
+        regPos.setModel(new DefaultComboBoxModel(EnumItems.Positions.values()));
+        regExp.setModel(new DefaultComboBoxModel(EnumItems.Animals.values()));
+        regExp2.setModel(new DefaultComboBoxModel(EnumItems.Animals.values()));
     }//GEN-LAST:event_formWindowOpened
 
     private void regPosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regPosActionPerformed
         // TODO add your handling code here:
         if (regPos.getSelectedIndex() == 2) {
             regExp.setEnabled(true);
-            System.out.println("Test");
         } else {
             regExp.setEnabled(false);
         }
-        UpdateJTable();
+        updateJTable();
     }//GEN-LAST:event_regPosActionPerformed
 
     /**
@@ -379,16 +401,18 @@ public class Register extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField regEmail;
-    private javax.swing.JTextField regExp;
+    private javax.swing.JComboBox regExp;
+    private javax.swing.JComboBox regExp2;
     private javax.swing.JComboBox regGender;
+    private javax.swing.JTextField regID;
     private javax.swing.JTextField regName;
     private javax.swing.JTextField regPhone;
     private javax.swing.JComboBox regPos;
     private javax.swing.JTextField regPwd;
-    private javax.swing.JTextField regUser;
     private javax.swing.JButton updateBtn;
+    private javax.swing.JTable userJTable;
     // End of variables declaration//GEN-END:variables
 }

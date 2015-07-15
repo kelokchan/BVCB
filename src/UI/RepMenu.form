@@ -53,7 +53,7 @@
   <SubComponents>
     <Component class="javax.swing.JButton" name="btn1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Add customer profiles"/>
+        <Property name="text" type="java.lang.String" value="Customer/Pet profiles"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn1ActionPerformed"/>
@@ -61,13 +61,19 @@
     </Component>
     <Component class="javax.swing.JButton" name="btn2">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Update appointments"/>
+        <Property name="text" type="java.lang.String" value="Appointments"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn2ActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btn3">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Update boarding services"/>
+        <Property name="text" type="java.lang.String" value="Boarding Services"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn3ActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

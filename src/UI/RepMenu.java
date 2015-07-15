@@ -11,13 +11,13 @@ package UI;
  *
  * @author Kelok
  */
-public class RecepMenu extends javax.swing.JFrame {
+public class RepMenu extends javax.swing.JFrame {
 
     
     /**
      * Creates new form MainScreen
      */
-    public RecepMenu() {
+    public RepMenu() {
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -39,16 +39,26 @@ public class RecepMenu extends javax.swing.JFrame {
         setTitle("Choose an option");
         setResizable(false);
 
-        btn1.setText("Add customer profiles");
+        btn1.setText("Customer/Pet profiles");
         btn1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn1ActionPerformed(evt);
             }
         });
 
-        btn2.setText("Update appointments");
+        btn2.setText("Appointments");
+        btn2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn2ActionPerformed(evt);
+            }
+        });
 
-        btn3.setText("Update boarding services");
+        btn3.setText("Boarding Services");
+        btn3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -79,9 +89,23 @@ public class RecepMenu extends javax.swing.JFrame {
 
     private void btn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn1ActionPerformed
         // TODO add your handling code here:
-        CustomerProfile cp = new CustomerProfile();
-        cp.setVisible(true);
+        AddProfile ap = new AddProfile();
+        ap.setVisible(true);
     }//GEN-LAST:event_btn1ActionPerformed
+
+    private void btn2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn2ActionPerformed
+        // TODO add your handling code here:
+        CreateAppointment as = new CreateAppointment();
+        as.setVisible(true);
+    }//GEN-LAST:event_btn2ActionPerformed
+
+    private void btn3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn3ActionPerformed
+        // TODO add your handling code here:
+        BoardingWindow bw = new BoardingWindow();
+        BoardingWindow.parentPanel.removeAll();
+        BoardingWindow.parentPanel.add(BoardingWindow.repPanel);
+        bw.setVisible(true);
+    }//GEN-LAST:event_btn3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -100,14 +124,18 @@ public class RecepMenu extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(RecepMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RepMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(RecepMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RepMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(RecepMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RepMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(RecepMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(RepMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
@@ -116,7 +144,7 @@ public class RecepMenu extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new RecepMenu().setVisible(true);
+                new RepMenu().setVisible(true);
             }
         });
     }
