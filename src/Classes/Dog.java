@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vet;
+package Classes;
 
 /**
  *
  * @author Kelok
  */
-public class Manager extends Person{
+public class Dog extends Animal{
     
 }

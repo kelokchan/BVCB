@@ -1,0 +1,8 @@
+ID	OWNERID	FULLNAME	AGE	TYPE	OVERNIGHT	DIAGNOSIS	STATUS	LAST_FED	
+P1	C1	Doge	1	Dog	true	Cancer Stage 2	Under treatment	Sun Jul 05 22:31:15 SGT 2015	
+P2	C1	Dogma	1	Dog	true				
+P3	C2	Catty	2	Cat	true				
+P4	C4	asd	212	Dog	false	No hope			
+P5	C3	Age2	3	Reptile	false				
+
+Number of registered pets: 5
