@@ -8,7 +8,7 @@ import Classes.Customer;
 import Classes.Animal;
 import Classes.ITableUpdate;
 
-public class AddProfile extends javax.swing.JFrame implements ITableUpdate {
+public class ProfileWindow extends javax.swing.JFrame implements ITableUpdate {
 
     
     Statement stmt = null;
@@ -16,7 +16,7 @@ public class AddProfile extends javax.swing.JFrame implements ITableUpdate {
     ResultSet rs = null;
     ResultSet rs2 = null;
 
-    public AddProfile() {
+    public ProfileWindow() {
         initComponents();
         setLocationRelativeTo(null);
         updateJTable();
@@ -323,13 +323,13 @@ public class AddProfile extends javax.swing.JFrame implements ITableUpdate {
 
     @Override
     public final void updateJTable() {
-        String query = "SELECT * FROM Customer";
-        String query2 = "SELECT * FROM Pet";
+        String customer_query = "SELECT * FROM Customer";
+        String oet_query = "SELECT * FROM Pet";
         try {
             con = Connect.ConnectDB();
             stmt = con.createStatement();
-            rs = stmt.executeQuery(query);
-            rs2 = stmt.executeQuery(query2);
+            rs = stmt.executeQuery(customer_query);
+            rs2 = stmt.executeQuery(oet_query);
             cusTable.setModel(DbUtils.resultSetToTableModel(rs));
             petTable.setModel(DbUtils.resultSetToTableModel(rs2));
 
@@ -386,13 +386,13 @@ public class AddProfile extends javax.swing.JFrame implements ITableUpdate {
 
     }
 
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new AddProfile().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new ProfileWindow().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField cusAddress;

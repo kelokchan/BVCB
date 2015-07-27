@@ -21,7 +21,7 @@ public class Connect {
 
     public static Connection ConnectDB() {
         try {
-            String url = "jdbc:ucanaccess://C:/Users/Kelok/Documents/NetBeansProjects/BVCB/BVCBData.accdb";
+            String url = "jdbc:ucanaccess://BVCBData.accdb";
             Connection con = DriverManager.getConnection(url);
             return con;
         } catch (Exception ex) {

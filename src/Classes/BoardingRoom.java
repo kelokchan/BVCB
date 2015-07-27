@@ -5,8 +5,9 @@
  */
 package Classes;
 
-import UI.BoardingWindow;
-import java.awt.TextArea;
+import java.sql.Connection;
+import java.sql.Statement;
+import javax.swing.JTable;
 
 /**
  *
@@ -14,23 +15,23 @@ import java.awt.TextArea;
  */
 public class BoardingRoom {
 
-    private String ID;
-    private String date;
-    private int days;
 
-    public BoardingRoom(String ID, String date, int days) {
-        this.ID = ID;
-        this.date = date;
-        this.days = days;
+    private Connection con = null;
+    private Statement stmt = null;
+
+
+    public boolean checkOccupied(int selectedRoom, JTable boardJTable) {
+        boolean isOccupied = false;
+        for (int i = 0; i < boardJTable.getRowCount(); i++) {
+            int occupiedRoomNo = (Integer) boardJTable.getModel().getValueAt(i, 3);
+            if (selectedRoom == occupiedRoomNo) {
+                isOccupied = true;
+            }
+        }
+        return isOccupied;
     }
-    
-    
-    
-    public void writeDetails(TextArea ta){
-        ta.setText(ID + "\n" + date + "\n" + days);
-    }
-    
-    public void setRoom(String name) {
-        int number = Integer.parseInt(name.replaceAll("[^0-9]", ""));
+
+    public int calculatePrice(int duration){
+        return duration * 50; 
     }
 }

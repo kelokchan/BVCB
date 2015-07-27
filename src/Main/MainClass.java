@@ -3,17 +3,23 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package UI;
+package Main;
 
 import java.sql.*;
 import javax.swing.JOptionPane;
 import Classes.*;
+import UI.AboutUsWindow;
+import UI.BoardingWindow;
+import UI.ManMenu;
+import UI.Register;
+import UI.RepMenu;
+import UI.VetMenu;
 
 /**
  *
  * @author Kelok
  */
-public class Login extends javax.swing.JFrame {
+public class MainClass extends javax.swing.JFrame {
 
     Statement stmt = null;
     Connection con = null;
@@ -24,9 +30,10 @@ public class Login extends javax.swing.JFrame {
     /**
      * Creates new form Login
      */
-    public Login() {
+    public MainClass() {
         initComponents();
         setLocationRelativeTo(null);
+        rootPane.setDefaultButton(loginBtn);
     }
 
     @SuppressWarnings("unchecked")
@@ -39,7 +46,7 @@ public class Login extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         passwordText = new javax.swing.JPasswordField();
         loginBtn = new javax.swing.JButton();
-        registerButton = new javax.swing.JButton();
+        regBtn = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
@@ -48,7 +55,7 @@ public class Login extends javax.swing.JFrame {
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
-                Login.this.windowOpened(evt);
+                MainClass.this.windowOpened(evt);
             }
         });
 
@@ -65,10 +72,10 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        registerButton.setLabel("Register");
-        registerButton.addActionListener(new java.awt.event.ActionListener() {
+        regBtn.setLabel("Register");
+        regBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                registerButtonActionPerformed(evt);
+                regBtnActionPerformed(evt);
             }
         });
 
@@ -89,7 +96,7 @@ public class Login extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(loginBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(registerButton))
+                .addComponent(regBtn))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -104,7 +111,7 @@ public class Login extends javax.swing.JFrame {
                     .addComponent(passwordText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(registerButton)
+                    .addComponent(regBtn)
                     .addComponent(loginBtn)))
         );
 
@@ -163,10 +170,10 @@ public class Login extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_loginBtnActionPerformed
 
-    private void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButtonActionPerformed
+    private void regBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regBtnActionPerformed
         Register register = new Register();
         register.setVisible(true);
-    }//GEN-LAST:event_registerButtonActionPerformed
+    }//GEN-LAST:event_regBtnActionPerformed
 
     private void windowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_windowOpened
 
@@ -174,7 +181,7 @@ public class Login extends javax.swing.JFrame {
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
         // TODO add your handling code here:
-        AboutUs au = new AboutUs();
+        AboutUsWindow au = new AboutUsWindow();
         au.setVisible(true);
     }//GEN-LAST:event_jLabel1MouseClicked
 
@@ -189,12 +196,11 @@ public class Login extends javax.swing.JFrame {
             if (results.next()) {
 
                 category = results.getString("Position");
-                JOptionPane.showMessageDialog(null, "Welcome");
+                JOptionPane.showMessageDialog(null, "Welcome, " + results.getString("Fullname") + "");
 
                 switch (category) {
                     case "Receptionist":
                         RepMenu ms = new RepMenu();
-                        Person p = new Person();
                         ms.setVisible(true);
                         break;
 
@@ -231,7 +237,7 @@ public class Login extends javax.swing.JFrame {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Login().setVisible(true);
+                new MainClass().setVisible(true);
             }
         });
     }
@@ -245,6 +251,6 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JButton loginBtn;
     private javax.swing.JPasswordField passwordText;
-    private javax.swing.JButton registerButton;
+    private javax.swing.JButton regBtn;
     // End of variables declaration//GEN-END:variables
 }

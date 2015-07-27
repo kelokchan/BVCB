@@ -9,12 +9,12 @@ package UI;
  *
  * @author Kelok
  */
-public class AboutUs extends javax.swing.JFrame {
+public class AboutUsWindow extends javax.swing.JFrame {
 
     /**
      * Creates new form AboutUs
      */
-    public AboutUs() {
+    public AboutUsWindow() {
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -43,7 +43,7 @@ public class AboutUs extends javax.swing.JFrame {
         jTextArea1.setColumns(20);
         jTextArea1.setFont(new java.awt.Font("Leelawadee UI", 0, 12)); // NOI18N
         jTextArea1.setRows(5);
-        jTextArea1.setText("Bintang Veterinary Clinic and Boarding (BVCB) is a \ngrowing provider of veterinary care for both domestic and exotic pets.\n\nThis system is written in Java. Thanks for using the system.  \n");
+        jTextArea1.setText("Bintang Veterinary Clinic and Boarding (BVCB) is a \ngrowing provider of veterinary care for both domestic and exotic pets.\n\nThis system is written in Java. Thanks for using the system.  \n\n\n\n\n\n\nVersion 1.0.430\n");
         jTextArea1.setFocusable(false);
         jScrollPane2.setViewportView(jTextArea1);
 

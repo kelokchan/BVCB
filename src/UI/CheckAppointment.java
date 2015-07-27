@@ -5,6 +5,7 @@
  */
 package UI;
 
+import Main.MainClass;
 import Classes.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -21,17 +22,18 @@ public class CheckAppointment extends javax.swing.JFrame implements ITableUpdate
     Statement stmt = null;
     Connection con = null;
     ResultSet rs = null;
+    Vet vet = new Vet();
 
     public CheckAppointment() {
         initComponents();
         setLocationRelativeTo(null);
         updateJTable();
-        vetLabel.setText("Hello " +Login.passed_VetName + ", here are your appointments: ");
+        vetLabel.setText("Hello " + MainClass.passed_VetName + ", here are your appointments: ");
     }
 
     @Override
     public final void updateJTable() {
-        String query = "SELECT Appointment.Customer, Appointment.Pet, Appointment.Date, Appointment.Time, Pet.Diagnosis FROM Appointment INNER JOIN Pet ON Appointment.Pet = Pet.ID WHERE Vet = '" + Login.passed_VetID + "'";
+        String query = "SELECT Appointment.Customer, Appointment.Pet, Appointment.Date, Appointment.Time, Pet.Diagnosis FROM Appointment INNER JOIN Pet ON Appointment.Pet = Pet.ID WHERE Vet = '" + MainClass.passed_VetID + "'";
         try {
             con = Connect.ConnectDB();
             stmt = con.createStatement();
@@ -197,55 +199,44 @@ public class CheckAppointment extends javax.swing.JFrame implements ITableUpdate
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
         // TODO add your handling code here:
-        int row = vetAppJTable.getSelectedRow();
-        String pet_id = vetAppJTable.getModel().getValueAt(row, 1).toString();
-        String query = "UPDATE Pet SET Diagnosis = '" + diagTextArea.getText() + "' WHERE ID = '" + pet_id + "'";
-        try {
-            con = Connect.ConnectDB();
-            stmt = con.createStatement();
-            stmt.execute(query);
-            JOptionPane.showMessageDialog(null, "Diagnosis/Prognosis submitted");
-            updateJTable();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex);
-        }
+        String diagnosis = diagTextArea.getText();
+        vet.submitDiagnosis(vetAppJTable, diagnosis);
+        updateJTable();
     }//GEN-LAST:event_submitButtonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CheckAppointment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CheckAppointment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CheckAppointment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CheckAppointment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new CheckAppointment().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(CheckAppointment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(CheckAppointment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(CheckAppointment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(CheckAppointment.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new CheckAppointment().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel custNameLabel;

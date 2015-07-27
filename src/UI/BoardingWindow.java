@@ -5,12 +5,14 @@
  */
 package UI;
 
+import Classes.BoardingRoom;
+import Classes.BoardingStaff;
 import javax.swing.*;
 import Classes.Connect;
 import Classes.ITableUpdate;
+import Classes.Receptionist;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -22,12 +24,16 @@ public class BoardingWindow extends javax.swing.JFrame implements ITableUpdate {
     Connection con = null;
     ResultSet rs = null;
     String petQuery = "SELECT * FROM Pet";
+    BoardingRoom boardingRoom = new BoardingRoom();
+    Receptionist receptionist = new Receptionist();
+    BoardingStaff boardingStaff = new BoardingStaff();
 
     public BoardingWindow() {
         initComponents();
         setLocationRelativeTo(null);
         Connect.populateComboBox(petComboBox, petQuery, "ID");
         updateJTable();
+        Date date = new Date();
 
     }
 
@@ -40,20 +46,10 @@ public class BoardingWindow extends javax.swing.JFrame implements ITableUpdate {
             stmt = con.createStatement();
             rs = stmt.executeQuery(query);
             boardJTable.setModel(DbUtils.resultSetToTableModel(rs));
+            boardJTable.getRowSorter().toggleSortOrder(3);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex);
         }
-    }
-
-    public boolean checkOccupied(int selectedRoom) {
-        boolean isOccupied = false;
-        for (int i = 0; i < boardJTable.getRowCount(); i++) {
-            int occupiedRoomNo = (Integer) boardJTable.getModel().getValueAt(i, 3);
-            if (selectedRoom == occupiedRoomNo) {
-                isOccupied = true;
-            }
-        }
-        return isOccupied;
     }
 
     @SuppressWarnings("unchecked")
@@ -68,7 +64,6 @@ public class BoardingWindow extends javax.swing.JFrame implements ITableUpdate {
         jLabel1 = new javax.swing.JLabel();
         petComboBox = new javax.swing.JComboBox();
         jLabel3 = new javax.swing.JLabel();
-        boardDatePicker = new com.toedter.calendar.JDateChooser();
         jLabel4 = new javax.swing.JLabel();
         boardDurationSpinner = new javax.swing.JSpinner();
         jLabel2 = new javax.swing.JLabel();
@@ -76,6 +71,9 @@ public class BoardingWindow extends javax.swing.JFrame implements ITableUpdate {
         updateButton = new javax.swing.JButton();
         checkoutButton = new javax.swing.JButton();
         createButton = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        priceLabel = new javax.swing.JLabel();
+        boardDatePicker = new com.toedter.calendar.JDateChooser();
         vetPanel = new javax.swing.JPanel();
         doneButton = new javax.swing.JButton();
         boardstaffPanel = new javax.swing.JPanel();
@@ -92,6 +90,7 @@ public class BoardingWindow extends javax.swing.JFrame implements ITableUpdate {
 
         jLabel7.setText("Boarding Details: ");
 
+        boardJTable.setAutoCreateRowSorter(true);
         boardJTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -116,11 +115,16 @@ public class BoardingWindow extends javax.swing.JFrame implements ITableUpdate {
 
         jLabel3.setText("Boarding date:");
 
-        boardDatePicker.setDateFormatString("dd/MM/yyyy");
-
         jLabel4.setText("Duration (Days):");
 
         boardDurationSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(1), Integer.valueOf(1), null, Integer.valueOf(1)));
+        Date date = new Date();
+        boardDatePicker.setDate(date);
+        boardDurationSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                boardDurationSpinnerStateChanged(evt);
+            }
+        });
 
         jLabel2.setText("Room no:");
 
@@ -147,6 +151,13 @@ public class BoardingWindow extends javax.swing.JFrame implements ITableUpdate {
             }
         });
 
+        jLabel9.setText("Price:");
+
+        priceLabel.setText("RM50");
+
+        boardDatePicker.setDateFormatString("dd/MM/yyyy");
+        boardDatePicker.setEnabled(false);
+
         javax.swing.GroupLayout repPanelLayout = new javax.swing.GroupLayout(repPanel);
         repPanel.setLayout(repPanelLayout);
         repPanelLayout.setHorizontalGroup(
@@ -160,31 +171,37 @@ public class BoardingWindow extends javax.swing.JFrame implements ITableUpdate {
                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 158, Short.MAX_VALUE)
-                        .addGroup(repPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(boardDurationSpinner, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(petComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(boardDatePicker, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
-                            .addComponent(roomComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGap(18, 18, Short.MAX_VALUE)
+                        .addGroup(repPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(repPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(boardDurationSpinner, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
+                                .addComponent(petComboBox, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(roomComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(priceLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(boardDatePicker, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(59, 59, 59))
                     .addGroup(repPanelLayout.createSequentialGroup()
                         .addComponent(createButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 116, Short.MAX_VALUE)
                         .addComponent(updateButton)
-                        .addGap(98, 98, 98)
-                        .addComponent(checkoutButton)))
+                        .addGap(87, 87, 87)
+                        .addComponent(checkoutButton))
+                    .addGroup(repPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel9)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         repPanelLayout.setVerticalGroup(
             repPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(repPanelLayout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addGap(12, 12, 12)
                 .addGroup(repPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(petComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addGap(17, 17, 17)
                 .addGroup(repPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(boardDatePicker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(boardDatePicker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(repPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(boardDurationSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -193,12 +210,16 @@ public class BoardingWindow extends javax.swing.JFrame implements ITableUpdate {
                 .addGroup(repPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(roomComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addGap(63, 63, 63)
+                .addGap(18, 18, 18)
+                .addGroup(repPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(priceLabel))
+                .addGap(31, 31, 31)
                 .addGroup(repPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(createButton)
                     .addComponent(updateButton)
                     .addComponent(checkoutButton))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         parentPanel.add(repPanel, "card3");
@@ -296,18 +317,20 @@ public class BoardingWindow extends javax.swing.JFrame implements ITableUpdate {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(133, Short.MAX_VALUE)
-                .addComponent(parentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(135, 135, 135))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 116, Short.MAX_VALUE)
+                        .addComponent(parentPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 444, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(142, 142, 142))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -326,24 +349,17 @@ public class BoardingWindow extends javax.swing.JFrame implements ITableUpdate {
 
 
     private void createButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createButtonActionPerformed
-        if (!checkOccupied(roomComboBox.getSelectedIndex() + 1)) {
-            try {
-                String date = new SimpleDateFormat("dd/MM/yyyy").format(boardDatePicker.getDate());
-                String Query = "INSERT INTO BoardingList VALUES ('" + petComboBox.getSelectedItem() + "','" + date + "','"
-                        + boardDurationSpinner.getValue() + "', '" + roomComboBox.getSelectedItem() + "')";
-                String overnightQuery = "Update Pet SET Overnight = 'true' WHERE ID='" + petComboBox.getSelectedItem() + "'";
-                con = Connect.ConnectDB();
-                stmt = con.createStatement();
-                stmt.execute(Query);
-                stmt.execute(overnightQuery);
-                JOptionPane.showMessageDialog(null, "Checked-in");
-                updateJTable();
-                Connect.populateComboBox(petComboBox, petQuery, "ID");
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(null, "Invalid selection");
-            }
+
+        String pet_ID = petComboBox.getSelectedItem().toString();
+        String date = new SimpleDateFormat("dd/MM/yyyy").format(boardDatePicker.getDate());
+        int days = Integer.parseInt(boardDurationSpinner.getValue().toString());
+        int roomNo = Integer.parseInt(roomComboBox.getSelectedItem().toString());
+        if (!boardingRoom.checkOccupied(roomComboBox.getSelectedIndex() + 1, boardJTable)) {
+            receptionist.checkIn(pet_ID, date, days, roomNo);
+            updateJTable();
+            Connect.populateComboBox(petComboBox, petQuery, "ID");
         } else {
-            JOptionPane.showMessageDialog(null, "Selected room is occupied.","Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Selected room is occupied.", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
     }//GEN-LAST:event_createButtonActionPerformed
@@ -351,36 +367,23 @@ public class BoardingWindow extends javax.swing.JFrame implements ITableUpdate {
 
     private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
         // TODO add your handling code here:
-        try {
-            String date = new SimpleDateFormat("dd/MM/yyyy").format(boardDatePicker.getDate());
-            String selection = boardJTable.getModel().getValueAt(boardJTable.getSelectedRow(), 0).toString();
-            con = Connect.ConnectDB();
-            stmt = con.createStatement();
-            String Query = "UPDATE BoardingList SET Pet_ID = '" + petComboBox.getSelectedItem() + "',Date = '" + date + "', Duration = '" + boardDurationSpinner.getValue()
-                    + "', RoomNo = '" + roomComboBox.getSelectedItem() + "' WHERE Pet_ID = '" + selection + "'";
-            stmt.execute(Query);
-            JOptionPane.showMessageDialog(null, "Updated");
+        String pet_ID = petComboBox.getSelectedItem().toString();
+        String date = new SimpleDateFormat("dd/MM/yyyy").format(boardDatePicker.getDate());
+        int days = Integer.parseInt(boardDurationSpinner.getValue().toString());
+        int roomNo = Integer.parseInt(roomComboBox.getSelectedItem().toString());
+        if (!boardingRoom.checkOccupied(roomComboBox.getSelectedIndex() + 1, boardJTable)) {
+            receptionist.updateBoarding(boardJTable, pet_ID, date, days, roomNo);
             updateJTable();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex.toString());
-
+        } else {
+            JOptionPane.showMessageDialog(null, "Selected room is occupied.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_updateButtonActionPerformed
 
     private void checkoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkoutButtonActionPerformed
         // TODO add your handling code here:
-        try {
-            String query = "DELETE FROM BoardingList WHERE Pet_ID = '" + petComboBox.getSelectedItem() + "'";
-            String overnightQuery = "Update Pet SET Overnight = 'false' WHERE ID='" + petComboBox.getSelectedItem() + "'";
-            con = Connect.ConnectDB();
-            stmt = con.createStatement();
-            stmt.execute(query);
-            stmt.execute(overnightQuery);
-            JOptionPane.showMessageDialog(null, "Checked-out");
-            updateJTable();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex.toString());
-        }
+        String pet_ID = petComboBox.getSelectedItem().toString();
+        receptionist.checkOut(pet_ID);
+        updateJTable();
     }//GEN-LAST:event_checkoutButtonActionPerformed
 
     private void boardJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_boardJTableMouseClicked
@@ -391,8 +394,8 @@ public class BoardingWindow extends javax.swing.JFrame implements ITableUpdate {
             String dateString = boardJTable.getModel().getValueAt(row, 1).toString();
             int duration = (Integer) boardJTable.getModel().getValueAt(row, 2);
             Date date = new SimpleDateFormat("dd/MM/yyyy").parse(dateString);
-
             petComboBox.setSelectedItem(petID);
+            boardDatePicker.setEnabled(true);
             boardDatePicker.setDate(date);
             boardDurationSpinner.setValue(duration);
             roomComboBox.setSelectedItem(boardJTable.getModel().getValueAt(row, 3).toString());
@@ -411,32 +414,31 @@ public class BoardingWindow extends javax.swing.JFrame implements ITableUpdate {
     }//GEN-LAST:event_doneButtonActionPerformed
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
-        int row = boardJTable.getSelectedRow();
-        String pet_id = boardJTable.getModel().getValueAt(row, 0).toString();
-        String query = "UPDATE Pet SET Status = '" + statusComboBox.getSelectedItem() + "', Last_Fed = '" + lastfedSpinner.getValue() + "'WHERE ID = '" + pet_id + "'";
-        try {
-            con = Connect.ConnectDB();
-            stmt = con.createStatement();
-            stmt.execute(query);
-            JOptionPane.showMessageDialog(null, "Submitted");
-            updateJTable();
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, ex);
-        }
+        String status = statusComboBox.getSelectedItem().toString();
+        String last_fed = lastfedSpinner.getValue().toString();
+        boardingStaff.submitStatus(boardJTable, status, last_fed);
+        updateJTable();
     }//GEN-LAST:event_submitButtonActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
+    private void boardDurationSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_boardDurationSpinnerStateChanged
+        // TODO add your handling code here:
+        int duration = Integer.parseInt(boardDurationSpinner.getValue().toString());
+        int price = boardingRoom.calculatePrice(duration);
+        priceLabel.setText("RM" + price);
+    }//GEN-LAST:event_boardDurationSpinnerStateChanged
 
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new BoardingWindow().setVisible(true);
-            }
-        });
-    }
+//    /**
+//     * @param args the command line arguments
+//     */
+//    public static void main(String args[]) {
+//
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                new BoardingWindow().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.toedter.calendar.JDateChooser boardDatePicker;
@@ -454,11 +456,13 @@ public class BoardingWindow extends javax.swing.JFrame implements ITableUpdate {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSpinner lastfedSpinner;
     public static javax.swing.JPanel parentPanel;
     private javax.swing.JComboBox petComboBox;
     private javax.swing.JLabel petIDLabel;
+    private javax.swing.JLabel priceLabel;
     public static javax.swing.JPanel repPanel;
     private javax.swing.JComboBox roomComboBox;
     private javax.swing.JComboBox statusComboBox;

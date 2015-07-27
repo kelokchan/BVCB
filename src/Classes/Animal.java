@@ -5,7 +5,7 @@
  */
 package Classes;
 
-import UI.AddProfile;
+import UI.ProfileWindow;
 import javax.swing.JTable;
 
 /**
@@ -22,9 +22,10 @@ public class Animal {
     private String Diagnosis;
     private boolean Overnight;
     private String Type;
+    private String Last_Fed;
 
     public String getID() {
-        JTable jTable = AddProfile.petTable;
+        JTable jTable = ProfileWindow.petTable;
         int no = jTable.getRowCount() + 1;
         return "P" + no;
     }
@@ -102,6 +103,14 @@ public class Animal {
     public String generateID(JTable jTable) {
         int no = jTable.getRowCount() + 1;
         return "P" + no;
+    }
+
+    public String getLast_Fed() {
+        return Last_Fed;
+    }
+
+    public void setLast_Fed(String Last_Fed) {
+        this.Last_Fed = Last_Fed;
     }
 
 }

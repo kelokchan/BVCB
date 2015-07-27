@@ -5,11 +5,15 @@
  */
 package Classes;
 
+import java.sql.Connection;
+import java.sql.Statement;
+
+
 /**
  *
  * @author Kelok
  */
-public class Person {
+public abstract class Person {
 
     private String Name;
     private String Gender;
@@ -18,8 +22,11 @@ public class Person {
     private String Email;
     private String phoneNo;
     private String Address;
+    private String Position;
 
-   
+    protected Connection con = null;
+    protected Statement stmt = null;
+
     public String getName() {
         return Name;
     }
@@ -68,22 +75,19 @@ public class Person {
         this.phoneNo = phoneNo;
     }
 
-    /**
-     * Get the value of Address
-     *
-     * @return the value of Address
-     */
     public String getAddress() {
         return Address;
     }
 
-    /**
-     * Set the value of Address
-     *
-     * @param Address new value of Address
-     */
     public void setAddress(String Address) {
         this.Address = Address;
     }
 
+    public String getPosition() {
+        return Position;
+    }
+
+    public void setPosition(String position) {
+        this.Position = position;
+    }
 }

@@ -5,7 +5,7 @@
  */
 package Classes;
 
-import UI.AddProfile;
+import UI.ProfileWindow;
 import javax.swing.JTable;
 
 /**
@@ -16,9 +16,10 @@ public class Customer extends Person {
 
     @Override
     public String getID() {
-        JTable jTable = AddProfile.cusTable;
+        JTable jTable = ProfileWindow.cusTable;
         int no = jTable.getRowCount() + 1;
         return "C" + no;
     }
+    
 
 }

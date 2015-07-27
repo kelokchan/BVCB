@@ -9,8 +9,11 @@ import javax.swing.JOptionPane;
 import java.sql.*;
 import net.proteanit.sql.DbUtils;
 import Classes.Connect;
-import Classes.EnumItems;
+import Enum.EnumItems;
 import Classes.ITableUpdate;
+import Classes.Person;
+import Classes.Receptionist;
+import Classes.Vet;
 import javax.swing.DefaultComboBoxModel;
 
 /**
@@ -22,7 +25,7 @@ public class Register extends javax.swing.JFrame implements ITableUpdate {
     Statement stmt = null;
     Connection con = null;
     ResultSet rs = null;
-
+    Receptionist staff = new Receptionist();
 
     /**
      * Creates new form Register
@@ -255,70 +258,51 @@ public class Register extends javax.swing.JFrame implements ITableUpdate {
 
     private void createBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createBtnActionPerformed
         // TODO add your handling code here:
-        try {
-            String position = regPos.getSelectedItem().toString();
-            String Query = "INSERT INTO " + position + " (Fullname, ID, Password, Position, Gender, Email, PhoneNo) VALUES ('" + regName.getText() + "','" + regID.getText() + "','"
-                    + regPwd.getText() + "', '" + regPos.getSelectedItem() + "','" + regGender.getSelectedItem() + "', '" + regEmail.getText() + "', '" + regPhone.getText() + "' )";
-            String userQuery = "INSERT INTO USERS VALUES ('" + regID.getText() + "','" + regPwd.getText() + "','" + regPos.getSelectedItem() + "', '" + regName.getText() + "')";
 
-            con = Connect.ConnectDB();
-            stmt = con.createStatement();
-            stmt.execute(Query);
-            stmt.execute(userQuery);
-            if (position.equals("Vet")) {
-                String additionalQuery = "UPDATE Vet SET Expertise = '" + regExp.getSelectedItem() + "', Expertise_2 = '" + regExp2.getSelectedItem() + "' WHERE ID = '" + regID.getText() + "'";
-                stmt.execute(additionalQuery);
-            }
-
-            regName.setText(null);
-            regID.setText(null);
-            regPwd.setText(null);
-
-            JOptionPane.showMessageDialog(null, "User added to database");
-            updateJTable();
-
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex.toString());
+        staff.setName(regName.getText());
+        staff.setID(regID.getText());
+        staff.setPassword(regPwd.getText());
+        staff.setPosition(regPos.getSelectedItem().toString());
+        staff.setGender(regGender.getSelectedItem().toString());
+        staff.setEmail(regEmail.getText());
+        staff.setPhoneNo(regPhone.getText());
+        staff.addStaff();
+        if (staff.getPosition().equals("Vet")) {
+            Vet vet = new Vet();
+            vet.setExpertise(regExp.getSelectedItem().toString());
+            vet.setExpertise_2(regExp2.getSelectedItem().toString());
+            vet.addExpertise(staff.getID());
         }
+        JOptionPane.showMessageDialog(null, "User added to database");
+        updateJTable();
     }//GEN-LAST:event_createBtnActionPerformed
 
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
-        try {
-            String position = regPos.getSelectedItem().toString();
-            String Query = "DELETE FROM " + position + " WHERE Fullname = '" + regName.getText() + "' ; DELETE FROM USERS WHERE ID = '" + regID.getText() + "'";
-            con = Connect.ConnectDB();
-            stmt = con.createStatement();
-            stmt.execute(Query);
-            JOptionPane.showMessageDialog(null, "User deleted from database");
-            updateJTable();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex.toString());
-        }
+
+        staff.deleteStaff();
+        JOptionPane.showMessageDialog(null, "User deleted from database");
+        updateJTable();
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
 
-        try {
-            String selection = userJTable.getModel().getValueAt(userJTable.getSelectedRow(), 0).toString();
-            String position = regPos.getSelectedItem().toString();
-            String query = "UPDATE " + position + " SET Fullname = '" + regName.getText() + "',ID = '" + regID.getText() + "', Password = '" + regPwd.getText()
-                    + "', Position = '" + regPos.getSelectedItem() + "', Gender = '" + regGender.getSelectedItem() + "', Email = '" + regEmail.getText() + "', PhoneNo = '" + regPhone.getText() + "' WHERE Fullname = '" + selection + "'";
-            String vetQuery = "UPDATE " + position + " SET Fullname = '" + regName.getText() + "',ID = '" + regID.getText() + "', Password = '" + regPwd.getText()
-                    + "', Position = '" + regPos.getSelectedItem() + "', Gender = '" + regGender.getSelectedItem() + "', Email = '" + regEmail.getText() + "', PhoneNo = '" + regPhone.getText() + "', Expertise = '" + regExp.getSelectedItem() + "' WHERE Fullname = '" + selection + "'";
-            con = Connect.ConnectDB();
-            stmt = con.createStatement();
-            if (position.equals("Vet")) {
-                stmt.execute(vetQuery);
-            } else {
-                stmt.execute(query);
-            }
-            JOptionPane.showMessageDialog(null, "User info updated in database");
-            updateJTable();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, ex.toString());
-
+        staff.setName(regName.getText());
+        staff.setID(regID.getText());
+        staff.setPassword(regPwd.getText());
+        staff.setPosition(regPos.getSelectedItem().toString());
+        staff.setGender(regGender.getSelectedItem().toString());
+        staff.setEmail(regEmail.getText());
+        staff.setPhoneNo(regPhone.getText());
+        staff.updateStaff(userJTable);
+        if (staff.getPosition().equals("Vet")) {
+            Vet vet = new Vet();
+            vet.setExpertise(regExp.getSelectedItem().toString());
+            vet.setExpertise_2(regExp2.getSelectedItem().toString());
+            vet.updateExpertise(userJTable);
         }
+        JOptionPane.showMessageDialog(null, "User info updated in database");
+        updateJTable();
     }//GEN-LAST:event_updateBtnActionPerformed
 
     private void userJTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_userJTableMouseClicked
@@ -333,8 +317,10 @@ public class Register extends javax.swing.JFrame implements ITableUpdate {
         regPhone.setText(userJTable.getModel().getValueAt(row, 6).toString());
         try {
             regExp.setSelectedItem(userJTable.getModel().getValueAt(row, 7).toString());
+            regExp2.setSelectedItem(userJTable.getModel().getValueAt(row, 8).toString());
         } catch (Exception ex) {
             regExp.setSelectedIndex(0);
+            regExp2.setSelectedIndex(0);
         }
     }//GEN-LAST:event_userJTableMouseClicked
 
@@ -349,46 +335,45 @@ public class Register extends javax.swing.JFrame implements ITableUpdate {
         // TODO add your handling code here:
         if (regPos.getSelectedIndex() == 2) {
             regExp.setEnabled(true);
+            regExp2.setEnabled(true);
         } else {
             regExp.setEnabled(false);
+            regExp2.setEnabled(false);
         }
         updateJTable();
     }//GEN-LAST:event_regPosActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Register().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(Register.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new Register().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton createBtn;

@@ -80,7 +80,7 @@
               <Group type="102" attributes="0">
                   <Component id="loginBtn" min="-2" pref="73" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
-                  <Component id="registerButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="regBtn" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -99,7 +99,7 @@
                   </Group>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="registerButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="regBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="loginBtn" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -138,12 +138,12 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loginBtnActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="registerButton">
+        <Component class="javax.swing.JButton" name="regBtn">
           <Properties>
             <Property name="label" type="java.lang.String" value="Register"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="registerButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="regBtnActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
